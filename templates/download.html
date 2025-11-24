@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog Downloader | Download</title>
+    <link rel="stylesheet" href="/static/css/common.css">
+    <style>
+        /* download.html 特有样式 */
+        .task-list {
+            width: 35%;
+            background-color: white;
+            border-right: 1px solid var(--border-color);
+            box-shadow: 2px 0 8px rgba(0, 0, 0, 0.03);
+            flex-shrink: 0;
+        }
+
+        .task-list h3 {
+            margin-bottom: 16px;
+            color: var(--text-secondary);
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .task-item {
+            display: flex;
+            flex-direction: column;
+            padding: 12px 16px;
+            cursor: pointer;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            transition: all 0.2s ease;
+            background-color: #f8fafc;
+            border: 1px solid transparent;
+            gap: 8px;
+        }
+
+        .task-item:hover {
+            background-color: #eef2ff;
+            transform: translateX(4px);
+            border-color: #c7d2fe;
+        }
+
+        .task-item.active {
+            background-color: #e0e7ff;
+            border-color: #6366f1;
+        }
+
+        .task-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+        }
+
+        .task-name {
+            flex: 1;
+            font-weight: 600;
+            font-size: 14px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .task-status {
+            font-size: 12px;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-weight: 500;
+        }
+
+        .status-waiting {
+            background-color: #fef3c7;
+            color: #d97706;
+        }
+
+        .status-running {
+            background-color: #d1fae5;
+            color: #059669;
+        }
+
+        .status-paused {
+            background-color: #e5e7eb;
+            color: #6b7280;
+        }
+
+        .status-error {
+            background-color: #e5e7eb;
+            color: #e70808;
+        }
+
+        .status-pending {
+            background-color: #f3f4f6;
+            color: #9ca3af;
+        }
+
+        .status-done {
+            background-color: #d1fae5;
+            color: #059669;
+        }
+
+        .task-progress {
+            width: 100%;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background-color: #e2e8f0;
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(to right, #4f46e5, #7c3aed);
+            border-radius: 3px;
+            transition: width 0.3s ease;
+        }
+
+        .progress-text {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        .console-container {
+            width: 45%;
+        }
+
+        .task-controls {
+            width: 20%;
+            background-color: white;
+            border-left: 1px solid var(--border-color);
+            box-shadow: -2px 0 8px rgba(0, 0, 0, 0.03);
+            flex-shrink: 0;
+        }
+
+        .task-controls h3 {
+            margin-bottom: 20px;
+            color: var(--text-secondary);
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .progress-info {
+            margin-bottom: 20px;
+            padding: 16px;
+            background-color: #f8fafc;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+        }
+
+        .progress-info h4 {
+            margin-bottom: 12px;
+            color: var(--text-secondary);
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .progress-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .progress-label {
+            color: var(--text-muted);
+            width: 80px;
+        }
+
+        .progress-value {
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+
+        .global-controls {
+            margin-bottom: 20px;
+        }
+
+        /* 确保按钮样式正确显示 */
+        .clear-log-btn {
+            display: block;
+            width: 100%;
+            padding: 10px 16px;
+            background: var(--danger-gradient);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: center;
+        }
+
+        .clear-log-btn:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+        }
+
+        /* 为删除已完成任务按钮添加特定样式 */
+        .delete-completed-btn {
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8) !important;
+            color: white !important;
+        }
+
+        .delete-completed-btn:hover {
+            background: linear-gradient(135deg, #2563eb, #1e40af) !important;
+        }
+
+        @media (max-width: 768px) {
+            .task-item {
+                flex-wrap: wrap;
+                gap: 8px;
+            }
+
+            .task-name {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="navbar">
+        <a href="/search">Search</a>
+        <a href="/download" class="active">Download</a>
+        <a href="/setting">Setting</a>
+    </div>
+
+    <div class="main-content">
+        <div class="panel task-list">
+            <h3>下载任务</h3>
+            <div id="taskList">
+                <p style="color: var(--text-muted);">加载任务列表中...</p>
+            </div>
+        </div>
+
+        <div class="console-container">
+            <div class="console-log" id="consoleLog">
+                <span class="log-info">在左侧选择任务以继续</span>
+            </div>
+        </div>
+
+        <div class="panel task-controls" id="controlPanel">
+            <h3>任务控制</h3>
+
+            <!-- 全局操作 - 始终显示 -->
+            <div class="global-controls">
+                <div class="param-input">
+                    <label>全局操作</label>
+                    <div style="display: flex; flex-direction: column; gap: 10px;">
+                        <button class="submit-btn" onclick="startAll()">全部开始</button>
+                        <button class="clear-log-btn" onclick="pauseAll()"
+                            style="background: var(--warning-gradient);">全部暂停</button>
+                        <button class="clear-log-btn" onclick="deleteAll()"
+                            style="background: var(--danger-gradient);">全部删除</button>
+                        <!-- 新增的删除已完成任务按钮 - 修复显示问题 -->
+                        <button class="clear-log-btn delete-completed-btn"
+                            onclick="deleteCompletedTasks()">删除已完成任务</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 任务详情 - 动态显示 -->
+            <div id="taskDetailPanel">
+                <p style="color: var(--text-muted);">请先在左侧选择任务查看详情...</p>
+            </div>
+
+            <button class="clear-log-btn" onclick="downloadLogManager.clearLog()"
+                style="margin-top: 20px;">清除日志</button>
+        </div>
+    </div>
+
+    <script src="/static/js/common.js"></script>
+    <script>
+        let downloadLogManager;
+        let tasks = [];
+        let selectedTaskId = null;
+        let pollingInterval;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // 使用独立的下载日志管理器
+            downloadLogManager = new LogManager('download');
+            loadTasks();
+            pollingInterval = setInterval(loadTasks, 1000);
+
+            // 调试信息 - 检查按钮是否存在
+            console.log('页面加载完成，检查按钮...');
+            const buttons = document.querySelectorAll('button');
+            buttons.forEach((btn, index) => {
+                console.log(`按钮 ${index}:`, btn.textContent, btn);
+            });
+        });
+
+        window.addEventListener('beforeunload', () => {
+            clearInterval(pollingInterval);
+            if (window.downloadEventSource) {
+                window.downloadEventSource.close();
+            }
+        });
+
+        // 新增函数：将秒数转换为时分秒格式，秒保留两位小数
+        function formatTime(seconds) {
+            if (!seconds || seconds === 0) return '0.00秒';
+
+            const hours = Math.floor(seconds / 3600);
+            const minutes = Math.floor((seconds % 3600) / 60);
+            const secs = (seconds % 60).toFixed(2); // 秒保留两位小数
+
+            let timeString = '';
+            if (hours > 0) {
+                timeString += `${hours}时`;
+            }
+            if (minutes > 0) {
+                timeString += `${minutes}分`;
+            }
+            if (parseFloat(secs) > 0 || timeString === '') {
+                timeString += `${secs}秒`;
+            }
+
+            return timeString;
+        }
+
+        function loadTaskControls(taskId) {
+            const panel = document.getElementById('taskDetailPanel');
+            const task = tasks.find(t => t.id === taskId);
+
+            if (!task) {
+                panel.innerHTML = '<p style="color:#ef4444;">任务不存在。</p>';
+                return;
+            }
+
+            selectedTaskId = taskId;
+
+            // 更新任务列表中的选中状态
+            document.querySelectorAll('.task-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            document.querySelector(`.task-item[data-id="${taskId}"]`).classList.add('active');
+
+            updateTaskDetailPanel(task);
+
+            // 启动日志流
+            startDownloadLogStream(taskId);
+        }
+
+        function startDownloadLogStream(taskId) {
+            // 关闭之前的日志流
+            if (window.downloadEventSource) {
+                window.downloadEventSource.close();
+            }
+
+            // 清除之前的日志，只显示当前任务的日志
+            downloadLogManager.clearLog();
+            downloadLogManager.appendLog(`${formatDateTime(new Date())}[INFO][Download] 开始监听任务 ${taskId} 的日志`);
+
+            // 启动新的日志流
+            window.downloadEventSource = new EventSource(`/download/log_stream/${taskId}`);
+
+            window.downloadEventSource.onmessage = function (event) {
+                const msg = JSON.parse(event.data);
+                downloadLogManager.appendLog(msg.line);
+                if (msg.done) {
+                    window.downloadEventSource.close();
+                    downloadLogManager.appendLog(`${formatDateTime(new Date())}[INFO][Download] 任务 ${taskId} 已完成`);
+                    // 重新加载任务列表以更新状态
+                    loadTasks();
+                }
+            };
+
+            window.downloadEventSource.onerror = function () {
+                downloadLogManager.appendLog(`${formatDateTime(new Date())}[ERROR][Download] 日志流连接失败`);
+                window.downloadEventSource.close();
+            };
+        }
+
+        function clearTaskSelection() {
+            selectedTaskId = null;
+            document.querySelectorAll('.task-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            document.getElementById('taskDetailPanel').innerHTML = '<p style="color: var(--text-muted);">请先在左侧选择任务查看详情...</p>';
+
+            // 清除日志流
+            if (window.downloadEventSource) {
+                window.downloadEventSource.close();
+            }
+
+            // 显示提示信息
+            downloadLogManager.clearLog();
+            downloadLogManager.appendLog(`${formatDateTime(new Date())}[INFO][Download] 请在左侧选择任务查看日志`);
+        }
+
+        function calculateProgress(downloadData) {
+            if (!downloadData.total || downloadData.total === 0) return 0;
+            return Math.round((downloadData.completed / downloadData.total) * 100);
+        }
+
+        function getStatusText(status) {
+            const statusMap = {
+                'pending': '待启动',
+                'waiting': '等待中',
+                'running': '运行中',
+                'pausing': '暂停中',
+                'paused': '已暂停',
+                'done': '已完成',
+                'error': '出错'
+            };
+            return statusMap[status] || status;
+        }
+
+        function getStatusClass(status) {
+            const classMap = {
+                'pending': 'status-pending',
+                'waiting': 'status-waiting',
+                'running': 'status-running',
+                'pausing': 'status-paused',
+                'paused': 'status-paused',
+                'done': 'status-done',
+                'error': 'status-error'
+            };
+            return classMap[status] || '';
+        }
+
+        function renderTasks() {
+            const container = document.getElementById('taskList');
+            if (tasks.length === 0) {
+                container.innerHTML = '<p style="color: var(--text-muted);">暂无任务</p>';
+                return;
+            }
+
+            container.innerHTML = tasks.map(task => {
+                const progress = calculateProgress(task.download_data);
+                return `
+                <div class="task-item" data-id="${task.id}" onclick="loadTaskControls('${task.id}')">
+                    <div class="task-header">
+                        <div class="task-name" title="${task.name}">${task.name}</div>
+                        <div class="task-status ${getStatusClass(task.status)}">${getStatusText(task.status)}</div>
+                    </div>
+                    <div class="task-progress">
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: ${progress}%"></div>
+                        </div>
+                        <div class="progress-text">
+                            <span>${task.download_data.completed}/${task.download_data.total}</span>
+                            <span>${progress}%</span>
+                        </div>
+                    </div>
+                </div>
+            `}).join('');
+
+            // 如果之前有选中的任务，保持选中状态并更新详情面板
+            if (selectedTaskId) {
+                const selectedItem = document.querySelector(`.task-item[data-id="${selectedTaskId}"]`);
+                if (selectedItem) {
+                    selectedItem.classList.add('active');
+                    // 更新任务详情面板
+                    const selectedTask = tasks.find(t => t.id === selectedTaskId);
+                    if (selectedTask) {
+                        updateTaskDetailPanel(selectedTask);
+                    }
+                } else {
+                    // 如果选中的任务不存在了，清空任务详情面板
+                    clearTaskSelection();
+                }
+            }
+        }
+
+        async function startTask(taskId) {
+            try {
+                await callAPI('/download/start', 'POST', { id: taskId });
+                downloadLogManager.appendLog(`${formatDateTime(new Date())}[INFO][Download] 开始任务: ${taskId}`);
+                await loadTasks();
+                // 重新启动日志流
+                startDownloadLogStream(taskId);
+            } catch (err) {
+                downloadLogManager.appendLog(`${formatDateTime(new Date())}[ERROR][Download] 启动任务失败: ${err.message}`);
+            }
+        }
+
+        async function pauseTask(taskId) {
+            try {
+                await callAPI('/download/pause', 'POST', { id: taskId });
+                downloadLogManager.appendLog(`${formatDateTime(new Date())}[INFO][Download] 暂停任务: ${taskId}`);
+                await loadTasks();
+            } catch (err) {
+                downloadLogManager.appendLog(`${formatDateTime(new Date())}[ERROR][Download] 暂停任务失败: ${err.message}`);
+            }
+        }
+
+        async function deleteTask(taskId) {
+            if (!confirm('确定删除此任务？')) return;
+            try {
+                await callAPI('/download/delete', 'POST', { id: taskId });
+                downloadLogManager.appendLog(`${formatDateTime(new Date())}[INFO][Download] 删除任务: ${taskId}`);
+                await loadTasks();
+                // 如果删除的是当前选中的任务，清空任务详情面板
+                if (selectedTaskId === taskId) {
+                    clearTaskSelection();
+                }
+            } catch (err) {
+                downloadLogManager.appendLog(`${formatDateTime(new Date())}[ERROR][Download] 删除任务失败: ${err.message}`);
+            }
+        }
+
+        async function startAll() {
+            try {
+                await callAPI('/download/start_all', 'POST');
+                downloadLogManager.appendLog(`${formatDateTime(new Date())}[INFO][Download] 开始所有任务`);
+                await loadTasks();
+            } catch (err) {
+                downloadLogManager.appendLog(`${formatDateTime(new Date())}[ERROR][Download] 批量启动失败: ${err.message}`);
+            }
+        }
+
+        async function pauseAll() {
+            try {
+                await callAPI('/download/pause_all', 'POST');
+                downloadLogManager.appendLog(`${formatDateTime(new Date())}[INFO][Download] 暂停所有任务`);
+                await loadTasks();
+            } catch (err) {
+                downloadLogManager.appendLog(`${formatDateTime(new Date())}[ERROR][Download] 批量暂停失败: ${err.message}`);
+            }
+        }
+
+        async function deleteAll() {
+            if (!confirm('确定删除所有任务？')) return;
+            try {
+                await callAPI('/download/delete_all', 'POST');
+                downloadLogManager.appendLog(`${formatDateTime(new Date())}[INFO][Download] 删除所有任务`);
+                await loadTasks();
+                clearTaskSelection();
+            } catch (err) {
+                downloadLogManager.appendLog(`${formatDateTime(new Date())}[ERROR][Download] 批量删除失败: ${err.message}`);
+            }
+        }
+
+        // 新增的删除已完成任务函数
+        async function deleteCompletedTasks() {
+            if (!confirm('确定删除所有已完成的任务？')) return;
+            try {
+                await callAPI('/download/delete_completed', 'GET');
+                downloadLogManager.appendLog(`${formatDateTime(new Date())}[INFO][Download] 删除所有已完成任务`);
+                await loadTasks();
+                // 如果当前选中的任务是已完成状态，清空任务详情面板
+                if (selectedTaskId) {
+                    const selectedTask = tasks.find(t => t.id === selectedTaskId);
+                    if (selectedTask && selectedTask.status === 'done') {
+                        clearTaskSelection();
+                    }
+                }
+            } catch (err) {
+                downloadLogManager.appendLog(`${formatDateTime(new Date())}[ERROR][Download] 删除已完成任务失败: ${err.message}`);
+            }
+        }
+
+        async function loadTasks() {
+            try {
+                const data = await callAPI('/download/tasks', 'GET');
+                tasks = data;
+                renderTasks();
+            } catch (err) {
+                document.getElementById('taskList').innerHTML = '<p style="color:red;">加载失败</p>';
+                downloadLogManager.appendLog(`${formatDateTime(new Date())}[ERROR][Download] 加载任务列表失败: ${err.message}`);
+            }
+        }
+
+        function updateTaskDetailPanel(task) {
+            const panel = document.getElementById('taskDetailPanel');
+            const progress = calculateProgress(task.download_data);
+            // 格式化已花费时间
+            const spentTime = formatTime(task.speed_time || 0);
+
+            let html = '';
+
+            // 进度信息
+            html += `
+                <div class="progress-info">
+                    <h4>任务详情</h4>
+                    <div class="progress-item">
+                        <span class="progress-label">任务名称:</span>
+                        <span class="progress-value">${task.name}</span>
+                    </div>
+                    <div class="progress-item">
+                        <span class="progress-label">状态:</span>
+                        <span class="progress-value ${getStatusClass(task.status)}">${getStatusText(task.status)}</span>
+                    </div>
+                    <div class="progress-item">
+                        <span class="progress-label">已花费时间:</span>
+                        <span class="progress-value">${spentTime}</span>
+                    </div>
+                    <div class="progress-item">
+                        <span class="progress-label">进度:</span>
+                        <span class="progress-value">${task.download_data.completed}/${task.download_data.total}</span>
+                    </div>
+                    <div class="progress-item">
+                        <span class="progress-label">完成度:</span>
+                        <span class="progress-value">${progress}%</span>
+                    </div>
+                    <div class="task-progress" style="margin-top: 12px;">
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: ${progress}%"></div>
+                        </div>
+                        <div class="progress-text">
+                            <span>${task.download_data.completed}/${task.download_data.total}</span>
+                            <span>${progress}%</span>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // 单个任务控制按钮
+            html += `<div class="param-input">`;
+            html += `<label>任务操作</label>`;
+            html += `<div style="display: flex; flex-direction: column; gap: 10px;">`;
+
+            if (task.status === 'pending' || task.status === 'paused') {
+                html += `<button class="submit-btn" onclick="startTask('${task.id}')">开始下载</button>`;
+            } else if (task.status === 'running' || task.status === 'waiting') {
+                html += `<button class="clear-log-btn" onclick="pauseTask('${task.id}')" style="background: var(--warning-gradient);">暂停下载</button>`;
+            }
+
+            html += `<button class="clear-log-btn" onclick="deleteTask('${task.id}')" style="background: var(--danger-gradient);">删除任务</button>`;
+            html += `</div>`;
+            html += `</div>`;
+
+            panel.innerHTML = html;
+        }
+    </script>
+</body>
+
+</html>

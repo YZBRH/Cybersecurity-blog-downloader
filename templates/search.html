@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog Downloader | Search</title>
+    <link rel="stylesheet" href="/static/css/common.css">
+    <style>
+        /* search.html 特有样式 */
+        .module-select {
+            width: 22%;
+            background-color: white;
+            border-right: 1px solid var(--border-color);
+            box-shadow: 2px 0 8px rgba(0, 0, 0, 0.03);
+            flex-shrink: 0;
+        }
+
+        .module-select h3 {
+            margin-bottom: 16px;
+            color: var(--text-secondary);
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .module-select label {
+            display: flex;
+            align-items: center;
+            padding: 12px 16px;
+            cursor: pointer;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            transition: all 0.2s ease;
+            background-color: #f8fafc;
+        }
+
+        .module-select label:hover {
+            background-color: #eef2ff;
+            transform: translateX(4px);
+        }
+
+        .module-select input[type="radio"] {
+            margin-right: 12px;
+            accent-color: #6366f1;
+            transform: scale(1.1);
+        }
+
+        .console-container {
+            width: 50%;
+        }
+
+        .search-params {
+            width: 28%;
+            background-color: white;
+            border-left: 1px solid var(--border-color);
+            box-shadow: -2px 0 8px rgba(0, 0, 0, 0.03);
+            flex-shrink: 0;
+        }
+
+        .search-params h3 {
+            margin-bottom: 20px;
+            color: var(--text-secondary);
+            font-size: 18px;
+            font-weight: 600;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="navbar">
+        <a href="/search">Search</a>
+        <a href="/download">Download</a>
+        <a href="/setting">Setting</a>
+    </div>
+
+    <div class="main-content">
+        <div class="panel module-select">
+            <h3>模块选择</h3>
+            {% for key, info in modules.items() %}
+            <label>
+                <input type="radio" name="module" value="{{ key }}" onchange="loadModuleParams('{{ key }}')">
+                {{ info.name }}
+            </label>
+            {% endfor %}
+        </div>
+
+        <div class="console-container">
+            <div class="console-log" id="consoleLog">
+                <span class="log-info">在左侧选择模块以继续</span>
+            </div>
+        </div>
+
+        <div class="panel search-params" id="paramPanel">
+            <p>请先在左侧选择使用的模块...</p>
+        </div>
+    </div>
+
+    <script>
+        const MODULE_CONFIG = {{ modules | tojson }};
+    </script>
+
+    <script src="/static/js/common.js"></script>
+    <script>
+        let searchLogManager;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            searchLogManager = new LogManager('search');
+        });
+
+        function loadModuleParams(moduleKey) {
+            const panel = document.getElementById('paramPanel');
+            const module = MODULE_CONFIG[moduleKey];
+
+            if (!module) {
+                panel.innerHTML = '<p style="color:#ef4444;">Unknown module.</p>';
+                return;
+            }
+
+            let html = `<h3>${module.name} 参数配置</h3>`;
+            if (module.params && module.params.length > 0) {
+                module.params.forEach((item, idx) => {
+                    const displayName = item.name || item.param;
+                    const paramName = item.param;
+                    const type = item.type || 'text';
+                    const required = item.required === true;
+                    const description = item.description || '';
+                    const defaultValue = item.default;
+
+                    html += `<div class="param-input">`;
+                    html += `<label>${displayName}${required ? ' <span style="color:#ef4444;">*</span>' : ''}</label>`;
+
+                    if (type === 'text') {
+                        const placeholder = description || `请输入 ${displayName}`;
+                        const value = defaultValue !== undefined ? String(defaultValue) : '';
+                        html += `<input type="text" id="param_${safeId(paramName)}" name="${paramName}" 
+                                placeholder="${placeholder}" value="${value.replace(/"/g, '&quot;')}">`;
+                    }
+                    else if (type === 'radio' && Array.isArray(item.options)) {
+                        html += `<div class="radio-group">`;
+                        item.options.forEach(opt => {
+                            const optId = `param_${safeId(paramName)}_${safeId(opt)}`;
+                            const checked = (defaultValue === opt) ? 'checked' : '';
+                            html += `
+                                <div class="option-item">
+                                    <input type="radio" id="${optId}" name="param_${safeId(paramName)}" value="${opt}" ${checked}>
+                                    <label for="${optId}">${opt}</label>
+                                </div>`;
+                        });
+                        html += `</div>`;
+                    }
+                    else if (type === 'checkbox' && Array.isArray(item.options)) {
+                        const groupId = safeId(paramName);
+                        html += `<div class="checkbox-group" data-group="${groupId}">`;
+                        item.options.forEach(opt => {
+                            const optId = `param_${groupId}_${safeId(opt)}`;
+                            const checked = Array.isArray(defaultValue) && defaultValue.includes(opt) ? 'checked' : '';
+                            html += `
+                                <div class="option-item">
+                                    <input type="checkbox" id="${optId}" name="param_${groupId}" value="${opt}" ${checked}>
+                                    <label for="${optId}">${opt}</label>
+                                </div>`;
+                        });
+                        html += `</div>`;
+                        html += `
+                            <div style="display:flex; gap:8px; margin-top:6px;">
+                                <button type="button" class="check-action-btn check-all-btn" onclick="toggleCheckAll('${groupId}', true)">全选</button>
+                                <button type="button" class="check-action-btn check-none-btn" onclick="toggleCheckAll('${groupId}', false)">取消</button>
+                            </div>`;
+                    }
+                    else if (type === 'switch') {
+                        const checked = defaultValue === true ? 'checked' : '';
+                        const switchId = `param_${safeId(paramName)}`;
+                        html += `
+                            <div class="switch-container">
+                                <label class="switch">
+                                    <input type="checkbox" id="${switchId}" ${checked}>
+                                    <span class="slider"></span>
+                                </label>
+                                ${description ? `<span style="color:#64748b;font-size:13px;">${description}</span>` : ''}
+                            </div>`;
+                    }
+                    else {
+                        html += `<p style="color:#ef4444;">Unsupported parameter type: ${type}</p>`;
+                    }
+
+                    html += `</div>`;
+                });
+
+                html += `<button class="submit-btn" onclick="submitSearch('${moduleKey}')">确定</button>`;
+                html += `<button class="clear-log-btn" onclick="searchLogManager.clearLog()">清除日志</button>`;
+            } else {
+                html += '<p style="color:#64748b;">No parameters required.</p>';
+                html += `<button class="clear-log-btn" onclick="searchLogManager.clearLog()" style="margin-top: 20px;">清除日志</button>`;
+            }
+
+            panel.innerHTML = html;
+        }
+
+        function submitSearch(moduleKey) {
+            const module = MODULE_CONFIG[moduleKey];
+            const params = {};
+
+            if (module && Array.isArray(module.params)) {
+                for (const item of module.params) {
+                    const paramName = item.param;
+                    const type = item.type || 'text';
+                    const required = item.required === true;
+
+                    if (type === 'text') {
+                        const el = document.getElementById(`param_${safeId(paramName)}`);
+                        const value = el ? el.value.trim() : '';
+                        if (required && value === '') {
+                            alert(`"${item.name}" 是必填项，请输入内容。`);
+                            return;
+                        }
+                        params[paramName] = value;
+                    }
+                    else if (type === 'radio') {
+                        const selected = document.querySelector(`input[name="param_${safeId(paramName)}"]:checked`);
+                        const value = selected ? selected.value : '';
+                        if (required && value === '') {
+                            alert(`"${item.name}" 是必填项，请选择一个选项。`);
+                            return;
+                        }
+                        params[paramName] = value;
+                    }
+                    else if (type === 'checkbox') {
+                        const checkboxes = document.querySelectorAll(`input[name="param_${safeId(paramName)}"]:checked`);
+                        const values = Array.from(checkboxes).map(cb => cb.value);
+                        if (required && values.length === 0) {
+                            alert(`"${item.name}" 是必填项，请至少选择一个选项。`);
+                            return;
+                        }
+                        params[paramName] = values;
+                    }
+                    else if (type === 'switch') {
+                        const el = document.getElementById(`param_${safeId(paramName)}`);
+                        const value = el ? el.checked : false;
+                        params[paramName] = value;
+                    }
+                }
+            }
+
+            fetch('/search', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ module: moduleKey, params: params })
+            })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.status === "started" && data.task_ids) {
+                        // 处理多个任务ID
+                        data.task_ids.forEach(taskId => {
+                            searchLogManager.appendLog(`${formatDateTime(new Date())}[INFO][Search] 任务已启动，ID: ${taskId}`);
+                            const eventSource = new EventSource(`/search/log_stream/${taskId}`);
+                            eventSource.onmessage = function (event) {
+                                const msg = JSON.parse(event.data);
+                                searchLogManager.appendLog(msg.line);
+                                if (msg.done) {
+                                    eventSource.close();
+                                    searchLogManager.appendLog(`${formatDateTime(new Date())}[INFO][Search] 任务 ${taskId} 已完成`);
+                                }
+                            };
+                            eventSource.onerror = function () {
+                                searchLogManager.appendLog(`${formatDateTime(new Date())}[WARN][Search] 日志流连接失败`);
+                                eventSource.close();
+                            };
+                        });
+                    } else {
+                        searchLogManager.appendLog(`${formatDateTime(new Date())}[ERROR][Search] 任务启动失败: ` + (data.log || "未知错误"));
+                    }
+                })
+                .catch(err => {
+                    console.error('Submission error:', err);
+                    searchLogManager.appendLog(`${formatDateTime(new Date())}[ERROR][Search] 提交请求失败`);
+                });
+        }
+
+        // 辅助函数
+        function safeId(str) {
+            return str.replace(/[^a-zA-Z0-9_-]/g, '_');
+        }
+
+        function toggleCheckAll(groupId, check) {
+            const checkboxes = document.querySelectorAll(`input[name="param_${groupId}"]`);
+            checkboxes.forEach(checkbox => {
+                checkbox.checked = check;
+            });
+        }
+    </script>
+</body>
+
+</html>

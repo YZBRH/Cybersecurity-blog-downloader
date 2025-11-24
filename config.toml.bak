@@ -1,0 +1,18 @@
+[global]
+debug = false  # 是否开启调试模式
+platform = "Windows"  # 运行平台
+
+[driver]
+browser_type = "chrome"  # 浏览器类型
+use_local_driver = false  # 是否强制使用本地驱动
+local_driver_path = ""  # 本地驱动路径，use_local_driver若为true，则使用该路径
+
+[download]
+path = "download"  # 下载文件保存路径
+max_workers = 5  # 最大允许线程数
+
+[log]
+is_save = true  # 是否保存日志
+path = "logs.txt"  # 日志文件保存路径
+max_lines = 1000000  # 最大保存行数
+encoding = "utf-8"  # 日志编码

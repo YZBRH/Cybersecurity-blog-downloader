@@ -1,0 +1,165 @@
+{
+    "ALL":{
+        "name": "全部",
+        "params": [
+            {
+                "name": "关键词",
+                "param": "keyword",
+                "description": "请输入搜索关键词",
+                "type": "text",
+                "required": true,
+                "default": ""
+            }
+        ]
+    },
+    
+    "FreeBuf": {
+        "name": "FreeBuf",
+        "params": [
+            {
+                "name": "关键词",
+                "param": "keyword",
+                "description": "请输入搜索关键词",
+                "type": "text",
+                "required": true,
+                "default": ""
+            },
+            {
+                "name": "文章类型",
+                "param": "articleType",
+                "type": "checkbox",
+                "options": [
+                    "资讯", "活动", "技术", "工具", "漏洞", "攻防演练", "AI安全", "开发安全", "web安全", "终端安全", "系统安全", "数据安全", "基础安全", "企业安全", "关基安全", "政策法规", "云安全", "移动安全", "安全招聘", "人物志", "其他"
+                ],
+                "required": false,
+                "default": [
+                    "资讯", "活动", "技术", "工具", "漏洞", "攻防演练", "AI安全", "开发安全", "web安全", "终端安全", "系统安全", "数据安全", "基础安全", "企业安全", "关基安全", "政策法规", "云安全", "移动安全", "安全招聘", "人物志", "其他"
+                ]
+            },
+            {
+                "name": "年份",
+                "param": "year",
+                "type": "radio",
+                "options": [
+                    "不限制", "2018", "2019", "2020", "2021", "2022", "2023", "2024", "2025"
+                ],
+                "required": false,
+                "default": "不限制"
+            },
+            {
+                "name": "关键词匹配范围",
+                "param": "stype",
+                "type": "radio",
+                "options": [
+                    "不限制", "标题搜索", "概要搜索", "全文搜索"
+                ],
+                "required": false,
+                "default": "不限制"
+            }
+        ]
+    },
+    "KanXue": {
+        "name": "看雪",
+        "params": [
+            {
+                "name": "关键词",
+                "param": "keyword",
+                "description": "请输入搜索关键词",
+                "type": "text",
+                "required": true,
+                "default": ""
+            }
+        ]
+    },
+    "XianZhi": {
+        "name": "先知社区",
+        "params": [
+            {
+                "name": "关键词",
+                "param": "keyword",
+                "description": "请输入搜索关键词",
+                "type": "text",
+                "required": true,
+                "default": ""
+            }
+        ]
+    },
+    "CNBlogs": {
+        "name": "博客园",
+        "params": [
+            {
+                "name": "关键词",
+                "param": "keyword",
+                "description": "请输入搜索关键词",
+                "type": "text",
+                "required": true,
+                "default": ""
+            },
+            {
+                "name": "最低浏览量",
+                "param": "ViewCount",
+                "description": "请输入最低浏览量",
+                "type": "text",
+                "required": false,
+                "default": ""
+            },
+            {
+                "name": "最低推荐数",
+                "param": "DiggCount",
+                "description": "请输入最低推荐数",
+                "type": "text",
+                "required": false,
+                "default": ""
+            },
+            {
+                "name": "时间范围",
+                "param": "DateTimeRange",
+                "type": "radio",
+                "options": [
+                    "不限制", "一周内", "一月内", "三月内", "一年内"
+                ],
+                "required": false,
+                "default": "不限制"
+            }
+        ]
+    },
+    "CSDN": {
+        "name": "CSDN",
+        "params": [
+            {
+                "name": "关键词",
+                "param": "keyword",
+                "description": "请输入搜索关键词",
+                "type": "text",
+                "required": true,
+                "default": ""
+            }
+        ]
+    },
+    "QiAnXin": {
+        "name": "奇安信攻防社区",
+        "params": [
+            {
+                "name": "关键词",
+                "param": "keyword",
+                "description": "请输入搜索关键词",
+                "type": "text",
+                "required": true,
+                "default": ""
+            }
+        ]
+    },
+    "ZhiHu": {
+        "name": "知乎(todo)",
+        "params": [
+            {
+                "name": "关键词",
+                "param": "keyword",
+                "description": "请输入搜索关键词",
+                "type": "text",
+                "required": true,
+                "default": ""
+            }
+        ]
+    }
+}

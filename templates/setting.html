@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog Downloader | Setting</title>
+    <link rel="stylesheet" href="/static/css/common.css">
+    <style>
+        .setting-category {
+            width: 22%;
+            background-color: white;
+            border-right: 1px solid var(--border-color);
+            box-shadow: 2px 0 8px rgba(0, 0, 0, 0.03);
+            flex-shrink: 0;
+        }
+
+        .setting-category h3 {
+            margin-bottom: 16px;
+            color: var(--text-secondary);
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .setting-category label {
+            display: flex;
+            align-items: center;
+            padding: 12px 16px;
+            cursor: pointer;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            transition: all 0.2s ease;
+            background-color: #f8fafc;
+        }
+
+        .setting-category label:hover {
+            background-color: #eef2ff;
+            transform: translateX(4px);
+        }
+
+        .setting-category input[type="radio"] {
+            margin-right: 12px;
+            accent-color: #6366f1;
+            transform: scale(1.1);
+        }
+
+        .setting-content {
+            width: 78%;
+            background-color: white;
+            padding: 30px;
+        }
+
+        .setting-content h3 {
+            margin-bottom: 20px;
+            color: var(--text-secondary);
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .settings-actions {
+            display: flex;
+            gap: 16px;
+            margin-top: 30px;
+            padding-top: 24px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .settings-actions button {
+            flex: 1;
+            padding: 14px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-save {
+            background: var(--success-gradient);
+            color: white;
+        }
+
+        .btn-reset {
+            background: var(--gray-gradient);
+            color: white;
+        }
+
+        .btn-save:hover,
+        .btn-reset:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .param-input {
+            margin-bottom: 20px;
+        }
+
+        .param-input label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        .param-input input[type="text"],
+        .param-input input[type="password"],
+        .param-input input[type="number"],
+        .param-input select,
+        .param-input textarea {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.2s;
+        }
+
+        .param-input input:focus,
+        .param-input select:focus,
+        .param-input textarea:focus {
+            outline: none;
+            border-color: #6366f1;
+        }
+
+        .param-input.readonly {
+            opacity: 0.7;
+        }
+
+        .param-input.readonly input,
+        .param-input.readonly select,
+        .param-input.readonly textarea {
+            background-color: #f8fafc;
+            cursor: not-allowed;
+        }
+
+        .path-input-group {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .path-input-group input {
+            flex: 1;
+        }
+
+        .btn-browse {
+            padding: 10px 16px;
+            background: #6366f1;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+        }
+
+        .btn-browse:hover {
+            background: #4f46e5;
+            transform: translateY(-1px);
+        }
+
+        .btn-browse:disabled {
+            background: #94a3b8;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .radio-group,
+        .checkbox-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .option-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .switch-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 24px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #cbd5e1;
+            transition: .4s;
+            border-radius: 24px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 16px;
+            width: 16px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked+.slider {
+            background-color: #6366f1;
+        }
+
+        input:checked+.slider:before {
+            transform: translateX(26px);
+        }
+
+        .param-description {
+            color: var(--text-muted);
+            font-size: 12px;
+            margin-top: 4px;
+        }
+
+        .required-star {
+            color: #ef4444;
+        }
+
+        .readonly-badge {
+            color: #64748b;
+            font-size: 12px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="navbar">
+        <a href="/search">Search</a>
+        <a href="/download">Download</a>
+        <a href="/setting" class="active">Setting</a>
+    </div>
+
+    <div class="main-content">
+        <div class="panel setting-category" id="settingCategory">
+            <h3>设置分类</h3>
+            <div style="text-align: center; padding: 20px;">
+                <div style="color: var(--text-muted);">正在加载分类...</div>
+            </div>
+        </div>
+
+        <div class="panel setting-content" id="settingPanel">
+            <p>请先在左侧选择设置分类...</p>
+        </div>
+    </div>
+
+    <script src="/static/js/common.js"></script>
+    <script>
+        let SETTING_CONFIG = {};
+        let currentCategory = '';
+
+        document.addEventListener('DOMContentLoaded', function () {
+            loadSettingConfig();
+        });
+
+        async function loadSettingConfig() {
+            try {
+                const response = await fetch('/api/settings/config');
+                if (response.ok) {
+                    SETTING_CONFIG = await response.json();
+                    renderSettingCategories();
+                } else {
+                    const errorText = await response.text();
+                    let errorMessage = '加载设置配置失败';
+                    try {
+                        const errorData = JSON.parse(errorText);
+                        errorMessage = errorData.message || errorMessage;
+                    } catch (e) {
+                        errorMessage = `服务器错误: ${response.status}`;
+                    }
+                    throw new Error(errorMessage);
+                }
+            } catch (error) {
+                console.error('加载设置配置失败:', error);
+                showMessage('加载设置配置失败: ' + error.message, 'error');
+            }
+        }
+
+        function renderSettingCategories() {
+            const categoryPanel = document.getElementById('settingCategory');
+            let html = '<h3>设置分类</h3>';
+
+            for (const [key, category] of Object.entries(SETTING_CONFIG)) {
+                html += `
+                    <label>
+                        <input type="radio" name="setting" value="${key}" onchange="loadSettingParams('${key}')">
+                        ${category.name}
+                    </label>
+                `;
+            }
+
+            categoryPanel.innerHTML = html;
+        }
+
+        function loadSettingParams(categoryKey) {
+            currentCategory = categoryKey;
+            const category = SETTING_CONFIG[categoryKey];
+
+            if (!category) {
+                document.getElementById('settingPanel').innerHTML = '<p style="color:#ef4444;">未知设置分类。</p>';
+                return;
+            }
+
+            loadSettingContent(categoryKey, category);
+        }
+
+        async function loadSettingContent(categoryKey, category) {
+            const panel = document.getElementById('settingPanel');
+
+            try {
+                const response = await fetch(`/api/settings/${categoryKey}`);
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    let errorMessage = '加载设置失败';
+                    try {
+                        const errorData = JSON.parse(errorText);
+                        errorMessage = errorData.message || errorMessage;
+                    } catch (e) {
+                        errorMessage = `服务器错误: ${response.status}`;
+                    }
+                    throw new Error(errorMessage);
+                }
+
+                const data = await response.json();
+                const currentSettings = data.settings || {};
+
+                let html = `<h3>${category.name} 设置</h3>`;
+
+                if (category.params && category.params.length > 0) {
+                    category.params.forEach((item) => {
+                        const displayName = item.name || item.param;
+                        const paramName = item.param;
+                        const type = item.type || 'text';
+                        const required = item.required === true;
+                        const description = item.description || '';
+                        const editable = item.editable !== false;
+
+                        const currentValue = currentSettings[paramName];
+                        const defaultValue = currentValue !== undefined ? currentValue : item.default;
+
+                        const readonlyClass = editable ? '' : 'readonly';
+                        const readonlyAttr = editable ? '' : 'readonly disabled';
+
+                        html += `<div class="param-input ${readonlyClass}">`;
+                        html += `<label>${displayName}${required ? ' <span class="required-star">*</span>' : ''}`;
+                        html += `</label>`;
+
+                        if (type === 'text' || type === 'path' || type === 'file') {
+                            const placeholder = description || `请输入 ${displayName}`;
+                            const value = defaultValue !== undefined ? String(defaultValue) : '';
+                            html += `<input type="text" id="param_${safeId(paramName)}" name="${paramName}" 
+                                    placeholder="${placeholder}" value="${escapeHtml(value)}" ${readonlyAttr}>`;
+                        }
+                        else if (type === 'number') {
+                            const value = defaultValue !== undefined ? Number(defaultValue) : '';
+                            const min = item.min !== undefined ? `min="${item.min}"` : '';
+                            const max = item.max !== undefined ? `max="${item.max}"` : '';
+                            const step = item.step !== undefined ? `step="${item.step}"` : '';
+                            html += `<input type="number" id="param_${safeId(paramName)}" name="${paramName}" 
+                                    value="${value}" ${min} ${max} ${step} ${readonlyAttr}>`;
+                        }
+                        else if (type === 'textarea') {
+                            const value = defaultValue !== undefined ? String(defaultValue) : '';
+                            const rows = item.rows || 3;
+                            html += `<textarea id="param_${safeId(paramName)}" name="${paramName}" 
+                                    placeholder="${description}" rows="${rows}" ${readonlyAttr}>${escapeHtml(value)}</textarea>`;
+                        }
+                        else if (type === 'select' && Array.isArray(item.options)) {
+                            html += `<select id="param_${safeId(paramName)}" name="${paramName}" ${readonlyAttr}>`;
+                            item.options.forEach(opt => {
+                                const optionValue = opt.value || opt;
+                                const optionLabel = opt.label || opt;
+                                const selected = (defaultValue === optionValue) ? 'selected' : '';
+                                html += `<option value="${optionValue}" ${selected}>${optionLabel}</option>`;
+                            });
+                            html += `</select>`;
+                        }
+                        else if (type === 'radio' && Array.isArray(item.options)) {
+                            html += `<div class="radio-group">`;
+                            item.options.forEach(opt => {
+                                const optValue = opt.value || opt;
+                                const optLabel = opt.label || opt;
+                                const checked = (defaultValue === optValue) ? 'checked' : '';
+                                html += `
+                                    <div class="option-item">
+                                        <input type="radio" id="param_${safeId(paramName)}_${safeId(optValue)}" 
+                                               name="param_${safeId(paramName)}" value="${optValue}" ${checked} ${readonlyAttr}>
+                                        <label for="param_${safeId(paramName)}_${safeId(optValue)}">${optLabel}</label>
+                                    </div>`;
+                            });
+                            html += `</div>`;
+                        }
+                        else if (type === 'checkbox' && Array.isArray(item.options)) {
+                            html += `<div class="checkbox-group">`;
+                            item.options.forEach(opt => {
+                                const optValue = opt.value || opt;
+                                const optLabel = opt.label || opt;
+                                const checked = Array.isArray(defaultValue) && defaultValue.includes(optValue) ? 'checked' : '';
+                                html += `
+                                    <div class="option-item">
+                                        <input type="checkbox" id="param_${safeId(paramName)}_${safeId(optValue)}" 
+                                               name="param_${safeId(paramName)}" value="${optValue}" ${checked} ${readonlyAttr}>
+                                        <label for="param_${safeId(paramName)}_${safeId(optValue)}">${optLabel}</label>
+                                    </div>`;
+                            });
+                            html += `</div>`;
+                        }
+                        else if (type === 'switch') {
+                            const checked = defaultValue === true ? 'checked' : '';
+                            html += `
+                                <div class="switch-container">
+                                    <label class="switch">
+                                        <input type="checkbox" id="param_${safeId(paramName)}" ${checked} ${readonlyAttr}>
+                                        <span class="slider"></span>
+                                    </label>
+                                    ${description ? `<span>${description}</span>` : ''}
+                                </div>`;
+                        }
+
+                        if (description && type !== 'switch') {
+                            html += `<div class="param-description">${description}</div>`;
+                        }
+
+                        html += `</div>`;
+                    });
+
+                    const hasEditableParams = category.params.some(item => item.editable !== false);
+                    if (hasEditableParams) {
+                        html += `
+                            <div class="settings-actions">
+                                <button class="btn-reset" onclick="resetCategorySettings('${categoryKey}')">恢复默认</button>
+                                <button class="btn-save" onclick="saveSettings('${categoryKey}')">保存设置</button>
+                            </div>
+                        `;
+                    }
+                } else {
+                    html += '<p style="color:#64748b;">该分类暂无可配置参数。</p>';
+                }
+
+                panel.innerHTML = html;
+            } catch (error) {
+                console.error('加载设置失败:', error);
+                panel.innerHTML = '<p style="color:#ef4444;">加载设置失败: ' + error.message + '</p>';
+            }
+        }
+
+        async function saveSettings(categoryKey) {
+            const category = SETTING_CONFIG[categoryKey];
+            if (!category) return;
+
+            const params = {};
+
+            for (const item of category.params) {
+                if (item.editable === false) continue;
+
+                const paramName = item.param;
+                const type = item.type || 'text';
+                const required = item.required === true;
+
+                let value;
+
+                if (type === 'text' || type === 'path' || type === 'file') {
+                    const el = document.getElementById(`param_${safeId(paramName)}`);
+                    value = el ? el.value.trim() : '';
+                }
+                else if (type === 'number') {
+                    const el = document.getElementById(`param_${safeId(paramName)}`);
+                    value = el ? parseFloat(el.value) : (item.default || 0);
+                }
+                else if (type === 'textarea') {
+                    const el = document.getElementById(`param_${safeId(paramName)}`);
+                    value = el ? el.value.trim() : '';
+                }
+                else if (type === 'select') {
+                    const el = document.getElementById(`param_${safeId(paramName)}`);
+                    value = el ? el.value : '';
+                }
+                else if (type === 'radio') {
+                    const selected = document.querySelector(`input[name="param_${safeId(paramName)}"]:checked`);
+                    value = selected ? selected.value : '';
+                }
+                else if (type === 'checkbox') {
+                    const checkboxes = document.querySelectorAll(`input[name="param_${safeId(paramName)}"]:checked`);
+                    value = Array.from(checkboxes).map(cb => cb.value);
+                }
+                else if (type === 'switch') {
+                    const el = document.getElementById(`param_${safeId(paramName)}`);
+                    value = el ? el.checked : false;
+                }
+
+                if (required && (!value || (Array.isArray(value) && value.length === 0))) {
+                    alert(`"${item.name}" 是必填项，请填写内容。`);
+                    return;
+                }
+
+                params[paramName] = value;
+            }
+
+            try {
+                const response = await fetch(`/api/settings/${categoryKey}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(params)
+                });
+
+                const data = await response.json();
+                if (data.status === 'success') {
+                    showMessage('设置保存成功！');
+                } else {
+                    showMessage('保存失败：' + data.message, 'error');
+                }
+            } catch (error) {
+                console.error('保存设置失败:', error);
+                showMessage('保存失败：网络错误', 'error');
+            }
+        }
+
+        async function resetCategorySettings(categoryKey) {
+            if (confirm('确定要恢复该分类的默认设置吗？')) {
+                try {
+                    const response = await fetch(`/api/settings/${categoryKey}/reset`, { method: 'POST' });
+                    const data = await response.json();
+
+                    if (data.status === 'success') {
+                        showMessage('已恢复默认设置');
+                        const category = SETTING_CONFIG[categoryKey];
+                        if (category) loadSettingContent(categoryKey, category);
+                    } else {
+                        showMessage('恢复失败：' + data.message, 'error');
+                    }
+                } catch (error) {
+                    console.error('恢复设置失败:', error);
+                    showMessage('恢复失败：网络错误', 'error');
+                }
+            }
+        }
+
+        function showMessage(message, type = 'success') {
+            const messageEl = document.createElement('div');
+            messageEl.textContent = message;
+            messageEl.style.cssText = `
+                position: fixed;
+                top: 80px;
+                right: 20px;
+                padding: 12px 20px;
+                border-radius: 8px;
+                color: white;
+                font-weight: 600;
+                z-index: 1000;
+                transition: all 0.3s ease;
+                background: ${type === 'success' ? '#10b981' : '#ef4444'};
+            `;
+
+            document.body.appendChild(messageEl);
+            setTimeout(() => {
+                messageEl.style.opacity = '0';
+                setTimeout(() => document.body.removeChild(messageEl), 300);
+            }, 3000);
+        }
+
+        function safeId(str) {
+            return str.replace(/[^a-zA-Z0-9_-]/g, '_');
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,387 @@
+/* common.css - 公共样式定义 */
+:root {
+    --primary-gradient: linear-gradient(135deg, #4f46e5, #7c3aed);
+    --success-gradient: linear-gradient(to right, #10b981, #059669);
+    --warning-gradient: linear-gradient(to right, #f59e0b, #d97706);
+    --danger-gradient: linear-gradient(to right, #ef4444, #dc2626);
+    --gray-gradient: linear-gradient(to right, #64748b, #94a3b8);
+
+    --bg-primary: #f8fafc;
+    --bg-white: #ffffff;
+    --bg-dark: #0f172a;
+    --border-color: #e2e8f0;
+    --text-primary: #1e293b;
+    --text-secondary: #475569;
+    --text-muted: #64748b;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+}
+
+/* 导航栏样式 */
+.navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background: var(--primary-gradient);
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 12px 0;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+}
+
+.navbar a {
+    color: white;
+    text-decoration: none;
+    margin: 0 24px;
+    font-weight: 600;
+    font-size: 16px;
+    padding: 6px 12px;
+    border-radius: 6px;
+    transition: background 0.2s;
+}
+
+.navbar a:hover,
+.navbar a.active {
+    background-color: rgba(255, 255, 255, 0.15);
+}
+
+/* 主内容区域 */
+.main-content {
+    margin-top: 70px;
+    display: flex;
+    height: calc(100vh - 70px);
+    flex-wrap: nowrap;
+}
+
+.panel {
+    padding: 20px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+}
+
+/* 控制台日志样式 */
+.console-container {
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    background-color: #f1f5f9;
+    flex-shrink: 0;
+}
+
+.console-log {
+    width: 100%;
+    max-width: 800px;
+    flex: 1;
+    min-height: 0;
+    background-color: var(--bg-dark);
+    color: #a0aec0;
+    font-family: 'Fira Code', 'Courier New', monospace;
+    white-space: pre-wrap;
+    padding: 16px;
+    font-size: 14px;
+    line-height: 1.5;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    overflow-y: auto;
+    border: 1px solid #1e293b;
+    margin: 0 auto;
+}
+
+/* 日志颜色 */
+.log-info {
+    color: #60a5fa;
+}
+
+.log-warn {
+    color: #fbbf24;
+}
+
+.log-error {
+    color: #f87171;
+}
+
+.log-debug {
+    color: #818cf8;
+}
+
+.log-default {
+    color: #a0aec0;
+}
+
+/* 按钮样式 */
+.btn {
+    padding: 6px 10px;
+    font-size: 12px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.15s;
+}
+
+.btn:hover:not(:disabled) {
+    opacity: 0.9;
+    transform: scale(1.05);
+}
+
+.btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.btn-run {
+    background-color: #10b981;
+    color: white;
+}
+
+.btn-pause {
+    background-color: #f59e0b;
+    color: white;
+}
+
+.btn-delete {
+    background-color: #ef4444;
+    color: white;
+}
+
+.global-btn {
+    padding: 12px;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    width: 90%;
+    transition: transform 0.15s, opacity 0.15s;
+}
+
+.global-btn.start {
+    background: var(--success-gradient);
+}
+
+.global-btn.pause {
+    background: var(--warning-gradient);
+}
+
+.global-btn.delete {
+    background: var(--danger-gradient);
+}
+
+.global-btn:hover {
+    transform: translateY(-2px);
+    opacity: 0.95;
+}
+
+.submit-btn {
+    padding: 12px;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    width: 100%;
+    transition: transform 0.15s, opacity 0.15s;
+    background: var(--primary-gradient);
+}
+
+.clear-log-btn {
+    padding: 12px;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    width: 100%;
+    transition: transform 0.15s, opacity 0.15s;
+    background: var(--gray-gradient);
+}
+
+.submit-btn:hover,
+.clear-log-btn:hover {
+    transform: translateY(-2px);
+    opacity: 0.95;
+}
+
+.submit-btn:active,
+.clear-log-btn:active {
+    transform: translateY(0);
+}
+
+/* 参数输入样式 */
+.param-input {
+    margin-bottom: 20px;
+}
+
+.param-input label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 600;
+    color: #334155;
+    font-size: 14px;
+}
+
+.param-input input[type="text"] {
+    width: 100%;
+    padding: 10px 14px;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    font-size: 14px;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.param-input input[type="text"]:focus {
+    outline: none;
+    border-color: #818cf8;
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+}
+
+.param-input .option-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    white-space: nowrap;
+}
+
+.param-input .radio-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.param-input .checkbox-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    align-items: center;
+}
+
+/* Switch 样式 */
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 50px;
+    height: 26px;
+}
+
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #cbd5e1;
+    transition: .3s;
+    border-radius: 34px;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 18px;
+    width: 18px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    transition: .3s;
+    border-radius: 50%;
+}
+
+input:checked+.slider {
+    background-color: #4f46e5;
+}
+
+input:checked+.slider:before {
+    transform: translateX(24px);
+}
+
+.param-input .switch-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.check-action-btn {
+    flex: 1;
+    padding: 4px 8px;
+    font-size: 12px;
+    border-radius: 4px;
+    border: 1px solid;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.check-all-btn {
+    background-color: #e0e7ff;
+    border-color: #c7d2fe;
+    color: #4f46e5;
+}
+
+.check-all-btn:hover {
+    background-color: #d1d9ff;
+}
+
+.check-none-btn {
+    background-color: #f1f5f9;
+    border-color: #cbd5e1;
+    color: #64748b;
+}
+
+.check-none-btn:hover {
+    background-color: #e2e8f0;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+    .main-content {
+        flex-wrap: wrap;
+        height: auto;
+    }
+
+    .panel {
+        width: 100%;
+        border: none;
+        box-shadow: none;
+        border-bottom: 1px solid var(--border-color);
+    }
+
+    .console-container {
+        padding: 16px;
+        background-color: var(--bg-primary);
+    }
+
+    .console-log {
+        height: 35vh;
+        min-height: 200px;
+        max-height: 400px;
+        width: 100%;
+        max-width: none;
+        flex: none;
+        margin: 0 auto;
+    }
+}

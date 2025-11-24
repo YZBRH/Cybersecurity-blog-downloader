@@ -1,0 +1,122 @@
+{
+    "global": {
+        "name": "全局",
+        "params": [
+            {
+                "param": "platform",
+                "name": "运行平台",
+                "type": "text",
+                "default": "None",
+                "description": "应用程序运行的平台",
+                "editable": false
+            },
+            {
+                "param": "debug",
+                "name": "调试模式",
+                "type": "switch",
+                "default": false,
+                "description": "启用详细的调试日志输出",
+                "editable": true
+            }
+        ]
+    },
+    "driver": {
+        "name": "浏览器驱动",
+        "params": [
+            {
+                "param": "browser_type",
+                "name": "浏览器类型",
+                "type": "select",
+                "default": "chrome",
+                "options": [
+                    {"value": "chrome", "label": "Chrome"}
+                ],
+                "description": "选择使用的浏览器类型",
+                "editable": true
+            },
+            {
+                "param": "use_local_driver",
+                "name": "使用本地驱动",
+                "type": "switch",
+                "default": false,
+                "description": "是否强制使用本地浏览器驱动",
+                "editable": true
+            },
+            {
+                "param": "local_driver_path",
+                "name": "驱动路径",
+                "type": "file",
+                "default": "None",
+                "description": "本地浏览器驱动的完整路径",
+                "editable": true
+            }
+        ]
+    },
+    "download": {
+        "name": "下载",
+        "params": [
+            {
+                "param": "path",
+                "name": "下载目录",
+                "type": "path",
+                "default": "download",
+                "description": "下载文件的保存路径",
+                "editable": true  
+            },
+            {
+                "param": "max_workers",
+                "name": "最大下载线程数",
+                "type": "number",
+                "default": 5,
+                "min": 1,
+                "max": 10,
+                "description": "同时下载的最大任务数量",
+                "editable": true
+            }
+        ]
+    },
+    "log": {
+        "name": "日志",
+        "params": [
+            {
+                "param": "path",
+                "name": "日志路径",
+                "type": "path",
+                "default": "log.txt",
+                "description": "日志文件的保存路径",
+                "editable": true  
+            },
+            {
+                "param": "is_save",
+                "name": "保存日志",
+                "type": "switch",
+                "default": true,
+                "description": "是否将日志保存到文件",
+                "editable": true
+            },
+            {
+                "param": "max_lines",
+                "name": "最大日志条数",
+                "type": "number",
+                "default": 1000000,
+                "min": 1000,
+                "max": 10000000,
+                "description": "最大保留的日志条目数量",
+                "editable": true
+            },
+            {
+                "param": "encoding",
+                "name": "文件编码",
+                "type": "select",
+                "default": "utf-8",
+                "options": [
+                    {"value": "utf-8", "label": "UTF-8"},
+                    {"value": "gbk", "label": "GBK"},
+                    {"value": "gb2312", "label": "GB2312"}
+                ],
+                "description": "文件保存使用的编码格式",
+                "editable": true
+            }
+        ]
+    }
+}
