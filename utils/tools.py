@@ -104,6 +104,7 @@ def get_web_driver(browser="chrome", driver_path=None, show_window=False) -> web
                 options.add_argument("--disable-gpu")  # 禁用 GPU 加速
 
             driver = webdriver.Chrome(service=service, options=options)
+            driver.set_page_load_timeout(CONFIG["download"]["timeout"])
 
             log.info("Chrome 浏览器启动成功")
 

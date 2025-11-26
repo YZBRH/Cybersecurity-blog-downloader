@@ -72,6 +72,16 @@
                 "max": 10,
                 "description": "同时下载的最大任务数量",
                 "editable": true
+            },
+            {
+                "param": "timeout",
+                "name": "超时时间",
+                "type": "number",
+                "default": 3600,
+                "min": 60,
+                "max": 7200,
+                "description": "下载访问的最大超时时间",
+                "editable": true
             }
         ]
     },

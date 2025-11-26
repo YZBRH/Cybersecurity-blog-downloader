@@ -2,8 +2,8 @@ from pathlib import Path
 from typing import Any, Optional, Dict
 import platform
 import copy
-
 import tomlkit
+
 
 def deep_update_in_toml(target, update):
     """
@@ -18,7 +18,10 @@ def deep_update_in_toml(target, update):
 class Config:
     def __init__(self, config_file=None):
         if config_file is None:
-            config_file = Path("config.toml")
+            if Path("config.toml").exists() and Path("config.toml").is_file():
+                config_file = Path("config.toml")
+            else:
+                raise Exception("尚未配置 config.toml 文件")
         self.config_file = config_file
 
         self._doc = self.read_from_file()

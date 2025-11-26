@@ -10,6 +10,7 @@ local_driver_path = ""  # 本地驱动路径，use_local_driver若为true，则�
 [download]
 path = "download"  # 下载文件保存路径
 max_workers = 5  # 最大允许线程数
+timeout = 3600  # 访问超时时间
 
 [log]
 is_save = true  # 是否保存日志
