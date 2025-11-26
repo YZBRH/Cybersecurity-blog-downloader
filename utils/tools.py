@@ -54,11 +54,12 @@ def check_internet() -> bool:
         return False
     return False
 
-def get_web_driver(browser="chrome", driver_path=None) -> webdriver:
+def get_web_driver(browser="chrome", driver_path=None, show_window=False) -> webdriver:
     """
     初始化浏览器驱动
     :param browser: 浏览器类型，默认使用 Chrome
     :param driver_path: 使用自定义路径，默认为空
+    :param show_window: 是否需要展示窗口
     :return:
     """
 
@@ -98,7 +99,7 @@ def get_web_driver(browser="chrome", driver_path=None) -> webdriver:
             options.add_experimental_option('excludeSwitches', ['enable-automation'])
             options.add_argument('--disable-blink-features=AutomationControlled')
             options.add_argument("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36 Edg/141.0.0.0")
-            if not CONFIG["global"]["debug"]:
+            if not CONFIG["global"]["debug"] and not show_window:
                 options.add_argument("--headless")  # 启用无头模式
                 options.add_argument("--disable-gpu")  # 禁用 GPU 加速
 

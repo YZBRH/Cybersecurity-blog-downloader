@@ -61,7 +61,7 @@ class CNBlogs(BaseModule):
         :param url: 触发反爬的地址
         :return: (是否成功绕过，通过验证的cookie)
         """
-        driver = get_web_driver()
+        driver = get_web_driver(show_window=True)
         driver.get(url)
 
         self.info(f"点击验证码")
@@ -85,8 +85,12 @@ class CNBlogs(BaseModule):
                     break
             
             # 背景图与滑块
-            bg_img = driver.find_element(By.ID, "aliyunCaptcha-img").get_attribute("src")
-            puzzle_img = driver.find_element(By.ID, "aliyunCaptcha-puzzle").get_attribute("src")
+            try:
+                bg_img = driver.find_element(By.ID, "aliyunCaptcha-img").get_attribute("src")
+                puzzle_img = driver.find_element(By.ID, "aliyunCaptcha-puzzle").get_attribute("src")
+            except Exception as e:
+                self.error(f"未获取到滑块图片：{e}")
+                continue
 
             try:
                 bg_img = bg_img.split(",")[1]
