@@ -126,3 +126,19 @@ python app.py
 - CSDN反爬处理
 - CSDN用户登录功能
 - 博客园自动化反爬
+
+
+
+## 更新日志
+
+- [2025.11.25] 基础项目上传
+
+- [2025.11.26] BUG修复
+
+  - chore(update): .gitignore，requirements.txt更新
+
+  - fix(FreeBuf): 针对FreeBuf新增的TLS检测进行了绕过
+  - fix(Search): 修复了“在模块调用搜索功能时若出现错误，未能及时清理异常任务导致新任务无法启动”的BUG
+  - fix(CNblogs):  修复了当禁用调试模式时，浏览器自动启用无头模式导致无法手动通过验证码的问题
+  - docx(README): README文档更新
+
