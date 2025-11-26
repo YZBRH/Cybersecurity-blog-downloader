@@ -1,4 +1,4 @@
-import requests
+import tls_client
 
 if __name__ == "__main__":
     import sys
@@ -66,7 +66,7 @@ class FreeBuf(BaseModule):
         params = {
             "content": search_dict["keyword"],
             "articleType": ",".join(search_dict.get("articleType", [])),
-            "year": "" if search_dict.get("year", "不限制") == "不限制" else search_dict.get("year"),
+            "year": "" if search_dict.get("year", "不限制") == "不限制" else search_dict.get("year", ""),
             "type": self.stype_dict[search_dict.get("stype", "不限制")],
             "time": "0",
             "page": "1",
@@ -76,9 +76,18 @@ class FreeBuf(BaseModule):
                  f"限制文章类型: {params['articleType']} ，限制年份: {params['year']} ，限制关键词匹配范围: {params['type']}")
         search_url = self.base_url + "/fapi/frontend/search/article"
 
-        res = requests.get(search_url, params=params, headers=self.headers).json()
-        if res["code"] != 200:
+        session = tls_client.Session(client_identifier="chrome_130")
+        res = session.get(search_url, params=params, headers=self.headers)
+
+        if res.status_code != 200:
             self.error(f"检索失败，返回信息：{res}")
+            return {}
+
+        if "请进行验证" in res.text:
+            self.error("触发人机验证，查询中止")
+            return {}
+        
+        res = res.json()
 
         search_data_list = res["data"].get("data_list", [])
         for search_data in search_data_list:
@@ -100,4 +109,5 @@ class FreeBuf(BaseModule):
 if __name__ == "__main__":
     freebuf = FreeBuf()
     freebuf.search({"keyword": "CVE"})
-    freebuf.download()
+    
+    # freebuf.download()
