@@ -125,7 +125,7 @@ class BaseModule(ABC):
             if is_page_blank(driver):
                 time.sleep(3)
 
-            WebDriverWait(driver, 60).until(
+            WebDriverWait(driver, 300).until(
                 lambda d: d.execute_script('return document.readyState') == 'complete'
             )
         except Exception as e:
@@ -164,7 +164,7 @@ class BaseModule(ABC):
         try:
             self.kill_elements(driver)
         except Exception as e:
-            self.warn(f"移除无用元素失败: {e}")
+            self.debug(f"移除无用元素失败: {e}")
 
         # 快闪保存(.mhtml)
         try:

@@ -45,7 +45,11 @@ class KanXue(BaseModule):
             ".container.px-0.pb-3.bbs_footer_start_column",  # 底部广告栏
             "#collection_thumb",  # 文章底部赞赏
             ".bbs_thread",  # 文章底部；链接
-            "#footer"  # 底部栏
+            "#footer",  # 底部栏
+            ".card.thumb_list_box",  # 赞赏
+            ".card.px-2.px-md-5.py-5"  # 赞赏
+            ".position-fixed.w-100.header_fiexd.bottom-nav",  # 底部导航栏
+            ".mt-3.haya-poll-thread-poll"  # 投票
             ]
         kill_element_by_css_selector(driver, remove_elements)
     

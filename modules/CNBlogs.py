@@ -50,7 +50,16 @@ class CNBlogs(BaseModule):
             "#blog_post_info_block",  # 底部介绍栏
             ".postDesc",  # 文章底部信息栏
             "#comment_form",  # 底部及广告栏
-            ".charm-bar-wrapper.hidden"  # 底部广告栏
+            ".charm-bar-wrapper.hidden",  # 底部广告栏
+            "#mytopmenu",  # 顶部菜单栏
+            "#leftcontent",  # 左侧栏
+            ".esa-toolbar",  # 悬浮工具栏
+            ".esa-catalog",  # 悬浮目录栏
+            "#page_end_html",  # 尾联
+            "#leftmenu",  # 左侧栏
+            "#rightmenu",  # 右侧栏
+            "#dayNightSwitch",  # 日夜切换按钮
+            "#mylinks",  # 跳转链接
         ]
         kill_element_by_css_selector(driver, remove_elements)
     

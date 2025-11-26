@@ -60,7 +60,11 @@ class CSDN(BaseModule):
             "#blogColumnPayAdvert",  # 专栏
             ".hljs-button.signin.active",  # 登录复制按钮
             ".btn-code-notes.mdeditor",  # AI按钮
-
+            ".ai-abstract-box",  # ai摘要
+            ".first-recommend-box.recommend-box",  # 推荐栏
+            "#pcCommentBox",  # 评论
+            "#blogExtensionBox",  # 扩展栏
+            ".community-name"  # 加入社区
         ]
         kill_element_by_css_selector(driver, selectors)
 
