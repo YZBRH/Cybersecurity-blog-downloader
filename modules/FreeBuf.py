@@ -35,9 +35,10 @@ class FreeBuf(BaseModule):
         
 
     def download_from_url(self, driver, url, save_path) -> None:
-        super().download_from_url(driver, url, save_path)
+        status = super().download_from_url(driver, url, save_path)
         # 清掉cookie以防止下一次访问触发验证码页面
         driver.delete_all_cookies()
+        return status
 
     def kill_elements(self, driver) -> None:
         super().kill_elements(driver)
