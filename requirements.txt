@@ -4,3 +4,4 @@ selenium
 webdriver-manager
 tomlkit
 bs4
+tls-client
