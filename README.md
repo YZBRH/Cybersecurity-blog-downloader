@@ -55,7 +55,7 @@
 pip install -r requirements.txt
 ```
 
-​	在config.toml中进行基础配置（建议保持默认）
+​	在`config.toml.bak`中进行基础配置（建议保持默认）
 
 ```toml
 [global]
@@ -70,6 +70,7 @@ local_driver_path = ""  # 本地驱动路径，use_local_driver若为true，则�
 [download]
 path = "download"  # 下载文件保存路径
 max_workers = 5  # 最大允许线程数
+timeout = 3600  # 访问超时时间
 
 [log]
 is_save = true  # 是否保存日志
@@ -77,6 +78,8 @@ path = "logs.txt"  # 日志文件保存路径
 max_lines = 1000000  # 最大保存行数
 encoding = "utf-8"  # 日志编码
 ```
+
+​	配置完成后，将`config.toml.bak`重命名为`config.toml`
 
 ​	启动程序：
 
@@ -126,6 +129,7 @@ python app.py
 - CSDN反爬处理
 - CSDN用户登录功能
 - 博客园自动化反爬
+- 更合理的FreeBuf自动化反爬
 
 
 
@@ -136,9 +140,12 @@ python app.py
 - [2025.11.26] BUG修复
 
   - chore(update): .gitignore，requirements.txt更新
-
-  - fix(FreeBuf): 针对FreeBuf新增的TLS检测进行了绕过
+- fix(FreeBuf): 针对FreeBuf新增的TLS检测进行了绕过
   - fix(Search): 修复了“在模块调用搜索功能时若出现错误，未能及时清理异常任务导致新任务无法启动”的BUG
   - fix(CNblogs):  修复了当禁用调试模式时，浏览器自动启用无头模式导致无法手动通过验证码的问题
+  - perf(Download): 进一步优化了下载时的元素筛选，进一步清除无用元素
   - docx(README): README文档更新
+  - chore(delete): 删除config.toml
+  - feat(timeout): 新增超时上限设置
+  - fix(FreeBuf): 修正了download_from_url函数返回不正确的问题
 
