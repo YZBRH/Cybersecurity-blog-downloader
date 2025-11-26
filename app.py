@@ -157,13 +157,17 @@ def cleanup_search_tasks():
     """
     MAX_TASK_DURATION = 60000
     while True:
-        time.sleep(60)  # 每分钟检查一次
+        time.sleep(3)  # 每分钟检查一次
         now = time.time()
         stale_ids = []
         for tid in list(SEARCH_TASKS.keys()):
             task = SEARCH_TASKS.get(tid, None)
             if task is None:
                 continue
+
+            if task.status == "error":
+                # 清理异常任务
+                stale_ids.append(tid)
 
             if task.status != "done" and (now - task.start_time) > MAX_TASK_DURATION:
                 stale_ids.append(tid)
