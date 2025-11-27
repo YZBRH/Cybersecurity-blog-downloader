@@ -123,7 +123,7 @@ python app.py
 
 
 
-## todo
+## TODO
 
 - 知乎模块
 - CSDN反爬处理
@@ -135,17 +135,21 @@ python app.py
 
 ## 更新日志
 
-- [2025.11.25] 基础项目上传
+##### [2025.11.25] 基础项目上传
 
-- [2025.11.26] BUG修复
+##### [2025.11.26] BUG修复
 
-  - chore(update): .gitignore，requirements.txt更新
+- chore(update): .gitignore，requirements.txt更新
 - fix(FreeBuf): 针对FreeBuf新增的TLS检测进行了绕过
-  - fix(Search): 修复了“在模块调用搜索功能时若出现错误，未能及时清理异常任务导致新任务无法启动”的BUG
-  - fix(CNblogs):  修复了当禁用调试模式时，浏览器自动启用无头模式导致无法手动通过验证码的问题
-  - perf(Download): 进一步优化了下载时的元素筛选，进一步清除无用元素
-  - docx(README): README文档更新
-  - chore(delete): 删除config.toml
-  - feat(timeout): 新增超时上限设置
-  - fix(FreeBuf): 修正了download_from_url函数返回不正确的问题
+- fix(Search): 修复了“在模块调用搜索功能时若出现错误，未能及时清理异常任务导致新任务无法启动”的BUG
+- fix(CNblogs):  修复了当禁用调试模式时，浏览器自动启用无头模式导致无法手动通过验证码的问题
+- perf(Download): 进一步优化了下载时的元素筛选，进一步清除无用元素
+- chore(delete): 删除config.toml
+- feat(timeout): 新增超时上限设置
+- fix(FreeBuf): 修正了download_from_url函数返回不正确的问题
+- docx(README): README文档更新
 
+##### [2025.11.26] BUG修复
+
+- fix(FreeBuf): 对有时候反爬绕过失败的问题进行了修复
+- docx(README): README文档更新
