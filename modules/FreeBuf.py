@@ -1,4 +1,5 @@
 import tls_client
+import time
 
 if __name__ == "__main__":
     import sys
@@ -37,7 +38,13 @@ class FreeBuf(BaseModule):
     def download_from_url(self, driver, url, save_path) -> None:
         status = super().download_from_url(driver, url, save_path)
         # 清掉cookie以防止下一次访问触发验证码页面
-        driver.delete_all_cookies()
+        try:
+            driver.delete_all_cookies()
+            driver.execute_script("window.localStorage.clear();")
+            driver.execute_script("window.sessionStorage.clear();")
+            time.sleep(0.5)
+        except Exception as e:
+            self.warn(f"删除cookie失败: {e}")
         return status
 
     def kill_elements(self, driver) -> None:
